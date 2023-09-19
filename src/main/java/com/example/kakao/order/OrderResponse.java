@@ -33,37 +33,38 @@ public class OrderResponse {
             this.orderItemDTOs = orderItemDTOs;
             this.totalPrice = totalPrice;
         }
-    }
 
-    @ToString
-    @Getter
-    @Setter
-    public class OrderItemDTO { // productId
-        private int productId;
-        private String productName;
-        private List<OptionItemDTO> optionItemDTOs;
+        @ToString
+        @Getter
+        @Setter
+        public class OrderItemDTO { // productId
+            private int productId;
+            private String productName;
+            private List<OptionItemDTO> optionItemDTOs;
 
-        public OrderItemDTO(Item item, List<OptionItemDTO> optionItemDTOs) {
-            this.productId = item.getOption().getProduct().getId();
-            this.productName = item.getOption().getProduct().getProductName();
-            this.optionItemDTOs = optionItemDTOs;
+            public OrderItemDTO(Item item, List<OptionItemDTO> optionItemDTOs) {
+                this.productId = item.getOption().getProduct().getId();
+                this.productName = item.getOption().getProduct().getProductName();
+                this.optionItemDTOs = optionItemDTOs;
+            }
+        }
+
+        @ToString
+        @Getter
+        @Setter
+        public class OptionItemDTO { // optionId + itemQuantity | itemPrice
+            private int optionId;
+            private String optionName;
+            private int quantity;
+            private int price;
+
+            public OptionItemDTO(Item item) {
+                this.optionId = item.getOption().getId();
+                this.optionName = item.getOption().getOptionName();
+                this.quantity = item.getQuantity();
+                this.price = item.getPrice();
+            }
         }
     }
 
-    @ToString
-    @Getter
-    @Setter
-    public class OptionItemDTO { // optionId + itemQuantity / itemPrice
-        private int optionId;
-        private String optionName;
-        private int quantity;
-        private int price;
-
-        public OptionItemDTO(Item item) {
-            this.optionId = item.getOption().getId();
-            this.optionName = item.getOption().getOptionName();
-            this.quantity = item.getQuantity();
-            this.price = item.getPrice();
-        }
-    }
 }

@@ -39,7 +39,7 @@ public class OrderRestController {
         if (sessionUser == null) {
             throw new Exception401("인증되지 않았습니다");
         }
-        OrderResponse.FindByIdDTO orderResult = orderService.findById(id);
+        OrderResponse.FindByIdDTO orderResult = orderService.findById(id, sessionUser);
         return ResponseEntity.ok(ApiUtils.success(orderResult));
     }
 

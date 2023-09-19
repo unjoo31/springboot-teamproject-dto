@@ -2,6 +2,7 @@ package com.example.kakao.order;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class OrderService {
-    private final ItemJPARepository ItemJPARepository;
+    private final ItemJPARepository itemJPARepository;
     private final OrderJPARepository orderJPARepository;
     private final CartJPARepository cartJPARepository;
 
@@ -29,9 +30,21 @@ public class OrderService {
         return null;
     }
 
-    
     // (기능5) 주문결과 확인
-    public OrderResponse.FindByIdDTO findById(int id) {
+    public OrderResponse.FindByIdDTO findById(int orderId, User sessionUser) {
+        // 1. 유저 주문목록 조회
+        Order orderPS = orderJPARepository.findByOrderIdAndUserId(orderId, sessionUser.getId())
+                .orElseThrow(() -> new Exception404("해당 주문을 찾을 수 없습니다 : " + orderId));
+
+        // 2. 유저 주문 아이템 조회
+        List<Item> item = itemJPARepository.findAllById(orderId);
+        if(item == null) {
+            throw new Exception404("해당 주문 아이템을 찾을 수 없습니다 : " + orderId);
+        }
+
+        // 3. 주문 -> 결과 DTO
+        OrderResponse.FindByIdDTO findByIdDTO = 
+
         return null;
     }
 
@@ -58,7 +71,7 @@ public class OrderService {
             itemList.add(item);
         }
         try {
-            ItemJPARepository.saveAll(itemList);
+            itemJPARepository.saveAll(itemList);
         } catch (Exception e) {
             throw new Exception500("결재 실패 : " + e.getMessage());
         }
