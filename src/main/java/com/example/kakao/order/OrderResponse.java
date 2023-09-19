@@ -15,6 +15,7 @@ public class OrderResponse {
     @Getter
     @Setter
     public static class FindAllByUserDTO {
+
         private ArrayList<CartDTO> carts;
         private Integer totalPrice;
 
@@ -22,6 +23,7 @@ public class OrderResponse {
         @Getter
         @Setter
         public static class CartDTO {
+
             private Integer cartId;
             private String optionName;
             private Integer price;
