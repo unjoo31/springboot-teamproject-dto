@@ -9,7 +9,7 @@ import lombok.ToString;
 
 public class OrderResponse {
 
-    // (기능4) 주문상품 정보조회 (유저별)
+    // (기능4) 주문상품 정보조회(유저별)
 
     @ToString
     @Getter
