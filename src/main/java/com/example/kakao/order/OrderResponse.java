@@ -1,11 +1,8 @@
 package com.example.kakao.order;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.example.kakao.cart.Cart;
 import com.example.kakao.order.item.Item;
-import com.example.kakao.product.Product;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,15 +22,15 @@ public class OrderResponse {
     @ToString
     @Getter
     @Setter
-    public static class FindByIdDTO {
+    public static class FindByIdDTO { // orderId + totalPrice
 
         private int orderId;
-        private List<OrderItemDTO> orderItemDTOList;
+        private List<OrderItemDTO> orderItemDTOs;
         private int totalPrice;
 
-        public FindByIdDTO(Item item, List<OrderItemDTO> orderItemDTO, int totalPrice) {
+        public FindByIdDTO(Item item, List<OrderItemDTO> orderItemDTOs, int totalPrice) {
             this.orderId = item.getOrder().getId();
-            this.orderItemDTOList = orderItemDTOList;
+            this.orderItemDTOs = orderItemDTOs;
             this.totalPrice = totalPrice;
         }
     }
@@ -41,22 +38,22 @@ public class OrderResponse {
     @ToString
     @Getter
     @Setter
-    public class OrderItemDTO {
+    public class OrderItemDTO { // productId
         private int productId;
         private String productName;
-        private List<OptionItemDTO> optionItemDTOList;
+        private List<OptionItemDTO> optionItemDTOs;
 
-        public OrderItemDTO(Product product, List<OptionItemDTO> optionItemDTOList) {
-            this.productId = product.getId();
-            this.productName = product.getProductName();
-            this.optionItemDTOList = optionItemDTOList;
+        public OrderItemDTO(Item item, List<OptionItemDTO> optionItemDTOs) {
+            this.productId = item.getOption().getProduct().getId();
+            this.productName = item.getOption().getProduct().getProductName();
+            this.optionItemDTOs = optionItemDTOs;
         }
     }
 
     @ToString
     @Getter
     @Setter
-    public class OptionItemDTO {
+    public class OptionItemDTO { // optionId + itemQuantity / itemPrice
         private int optionId;
         private String optionName;
         private int quantity;
