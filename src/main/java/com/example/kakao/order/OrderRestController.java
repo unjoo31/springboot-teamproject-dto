@@ -35,7 +35,12 @@ public class OrderRestController {
     // (기능5) 주문결과 확인
     @GetMapping("/orders/{id}")
     public ResponseEntity<?> findById(@PathVariable Integer id) {
-        return null;
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) {
+            throw new Exception401("인증되지 않았습니다");
+        }
+        OrderResponse.FindByIdDTO orderResult = orderService.findById(id);
+        return ResponseEntity.ok(ApiUtils.success(orderResult));
     }
 
     // (기능4) 주문상품 정보조회 (유저별) - 장바구니 내역 가져오기
