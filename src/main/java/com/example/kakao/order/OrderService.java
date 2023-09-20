@@ -2,8 +2,6 @@ package com.example.kakao.order;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +11,6 @@ import com.example.kakao._core.errors.exception.Exception500;
 import com.example.kakao.cart.Cart;
 import com.example.kakao.cart.CartJPARepository;
 import com.example.kakao.order.OrderResponse.FindByIdDTO;
-import com.example.kakao.order.OrderResponse.FindByIdDTO.OrderItemDTO;
-import com.example.kakao.order.OrderResponse.FindByIdDTO.OrderItemDTO.OptionItemDTO;
 import com.example.kakao.order.item.Item;
 import com.example.kakao.order.item.ItemJPARepository;
 import com.example.kakao.user.User;
@@ -35,9 +31,10 @@ public class OrderService {
     }
 
     // (기능5) 주문결과 확인
-    public OrderResponse.FindByIdDTO findById(int orderId, User sessionUser) {
-        // 1. 유저 주문목록 조회
-        Order orderPS = orderJPARepository.findByOrderIdAndUserId(orderId, sessionUser.getId())
+    public OrderResponse.FindByIdDTO findById(int orderId, int sessionId) {
+
+        // 1. 유저 주문 목록 조회
+        Order orderPS = orderJPARepository.findByOrderIdAndUserId(orderId, sessionId)
                 .orElseThrow(() -> new Exception404("해당 주문을 찾을 수 없습니다 : " + orderId));
 
         // 2. 유저 주문 아이템 조회
@@ -46,19 +43,16 @@ public class OrderService {
             throw new Exception404("해당 주문 아이템을 찾을 수 없습니다 : " + orderId);
         }
 
-        // 3. 주문 -> 결과 DTO
-        List<OrderResponse.FindByIdDTO.OrderItemDTO.OptionItemDTO> optionItemDTOs = items.stream()
-                .map(OptionItemDTO::new)
-                .collect(Collectors.toList());
-        List<OrderResponse.FindByIdDTO.OrderItemDTO> orderItemDTOs = items.stream().map(OrderItemDTO::new)
-                .collect(Collectors.toList());
-        List<OrderResponse.FindByIdDTO> findByIdDTO = new ArrayList<>();
+        // 3. 주문 총 금액
         int totalPrice = 0;
         for (Item item : items) {
             totalPrice += item.getPrice();
         }
 
-        return findByIdDTO;
+        // 3. 주문 -> 결과 DTO
+        OrderResponse.FindByIdDTO responseDTO = new FindByIdDTO(orderPS, items, totalPrice);
+
+        return responseDTO;
     }
 
     @Transactional

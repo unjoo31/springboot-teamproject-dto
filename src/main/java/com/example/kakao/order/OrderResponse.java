@@ -1,8 +1,11 @@
 package com.example.kakao.order;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.example.kakao.order.item.Item;
+import com.example.kakao.product.Product;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,45 +22,55 @@ public class OrderResponse {
     }
 
     // (기능5) 주문결과 확인
+
+    // 주문목록 DTO
     @ToString
     @Getter
     @Setter
-    public static class FindByIdDTO { // orderId + totalPrice
+    public static class FindByIdDTO {
 
         private int orderId;
-        private List<OrderItemDTO> orderItemDTOs;
+        private List<ItemDTO> items;
         private int totalPrice;
 
-        public FindByIdDTO(Item item, List<OrderItemDTO> orderItemDTOs, int totalPrice) {
-            this.orderId = item.getOrder().getId();
-            this.orderItemDTOs = orderItemDTOs;
+        public FindByIdDTO(Order order, List<Item> items, int totalPrice) {
+            this.orderId = order.getId();
+            this.items = items.stream()
+                    .map(o -> new ItemDTO(o, order))
+                    .collect(Collectors.toList());
             this.totalPrice = totalPrice;
         }
 
+        // 아이템 DTO
         @ToString
         @Getter
         @Setter
-        public class OrderItemDTO { // productId
+        public class ItemDTO { // items
             private int productId;
             private String productName;
-            private List<OptionItemDTO> optionItemDTOs;
+            private List<OptionDTO> options;
 
-            public OrderItemDTO(Item item, List<OptionItemDTO> optionItemDTO) {
+            public ItemDTO(Item item, Order order) {
                 this.productId = item.getOption().getProduct().getId();
                 this.productName = item.getOption().getProduct().getProductName();
-                this.optionItemDTOs = optionItemDTOs;
+                this.options = order.getItems().stream()
+                        .filter(a -> a.getOption().getProduct().getId() == productId) // option의 productId = productId
+                                                                                      // -> true
+                        .map(i -> new OptionDTO(i))
+                        .collect(Collectors.toList());
             }
 
+            // 옵션 DTO
             @ToString
             @Getter
             @Setter
-            public class OptionItemDTO { // optionId + itemQuantity | itemPrice
+            public class OptionDTO {
                 private int optionId;
                 private String optionName;
                 private int quantity;
                 private int price;
 
-                public OptionItemDTO(Item item) {
+                public OptionDTO(Item item) {
                     this.optionId = item.getOption().getId();
                     this.optionName = item.getOption().getOptionName();
                     this.quantity = item.getQuantity();
@@ -67,5 +80,4 @@ public class OrderResponse {
         }
 
     }
-
 }

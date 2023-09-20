@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderRestController {
 
     private final HttpSession session;
-    private OrderService orderService;
+    private final OrderService orderService;
 
     // 결재하기 - (주문 인서트)
     @PostMapping("/orders/save")
@@ -35,12 +35,15 @@ public class OrderRestController {
     // (기능5) 주문결과 확인
     @GetMapping("/orders/{id}")
     public ResponseEntity<?> findById(@PathVariable Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("인증되지 않았습니다");
-        }
-        OrderResponse.FindByIdDTO orderResult = orderService.findById(id, sessionUser);
-        return ResponseEntity.ok(ApiUtils.success(orderResult));
+        // User sessionUser = (User) session.getAttribute("sessionUser");
+        // if (sessionUser == null) {
+        // throw new Exception401("인증되지 않았습니다");
+        // }
+        System.out.println("테스트 : 스타트");
+        System.out.println("테스트 : order id : " + id);
+        OrderResponse.FindByIdDTO responseDTO = orderService.findById(id, 1);
+        System.out.println("테스트 : 돌아왔다");
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     // (기능4) 주문상품 정보조회 (유저별) - 장바구니 내역 가져오기
