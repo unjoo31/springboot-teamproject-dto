@@ -3,6 +3,7 @@ package com.example.kakao.order;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,9 @@ import com.example.kakao._core.errors.exception.Exception404;
 import com.example.kakao._core.errors.exception.Exception500;
 import com.example.kakao.cart.Cart;
 import com.example.kakao.cart.CartJPARepository;
+import com.example.kakao.order.OrderResponse.FindByIdDTO;
+import com.example.kakao.order.OrderResponse.FindByIdDTO.OrderItemDTO;
+import com.example.kakao.order.OrderResponse.FindByIdDTO.OrderItemDTO.OptionItemDTO;
 import com.example.kakao.order.item.Item;
 import com.example.kakao.order.item.ItemJPARepository;
 import com.example.kakao.user.User;
@@ -37,15 +41,24 @@ public class OrderService {
                 .orElseThrow(() -> new Exception404("해당 주문을 찾을 수 없습니다 : " + orderId));
 
         // 2. 유저 주문 아이템 조회
-        List<Item> item = itemJPARepository.findAllById(orderId);
-        if(item == null) {
+        List<Item> items = itemJPARepository.findAllById(orderId);
+        if (items == null) {
             throw new Exception404("해당 주문 아이템을 찾을 수 없습니다 : " + orderId);
         }
 
         // 3. 주문 -> 결과 DTO
-        OrderResponse.FindByIdDTO findByIdDTO = 
+        List<OrderResponse.FindByIdDTO.OrderItemDTO.OptionItemDTO> optionItemDTOs = items.stream()
+                .map(OptionItemDTO::new)
+                .collect(Collectors.toList());
+        List<OrderResponse.FindByIdDTO.OrderItemDTO> orderItemDTOs = items.stream().map(OrderItemDTO::new)
+                .collect(Collectors.toList());
+        List<OrderResponse.FindByIdDTO> findByIdDTO = new ArrayList<>();
+        int totalPrice = 0;
+        for (Item item : items) {
+            totalPrice += item.getPrice();
+        }
 
-        return null;
+        return findByIdDTO;
     }
 
     @Transactional

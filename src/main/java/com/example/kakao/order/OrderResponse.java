@@ -42,29 +42,30 @@ public class OrderResponse {
             private String productName;
             private List<OptionItemDTO> optionItemDTOs;
 
-            public OrderItemDTO(Item item, List<OptionItemDTO> optionItemDTOs) {
+            public OrderItemDTO(Item item, List<OptionItemDTO> optionItemDTO) {
                 this.productId = item.getOption().getProduct().getId();
                 this.productName = item.getOption().getProduct().getProductName();
                 this.optionItemDTOs = optionItemDTOs;
             }
-        }
 
-        @ToString
-        @Getter
-        @Setter
-        public class OptionItemDTO { // optionId + itemQuantity | itemPrice
-            private int optionId;
-            private String optionName;
-            private int quantity;
-            private int price;
+            @ToString
+            @Getter
+            @Setter
+            public class OptionItemDTO { // optionId + itemQuantity | itemPrice
+                private int optionId;
+                private String optionName;
+                private int quantity;
+                private int price;
 
-            public OptionItemDTO(Item item) {
-                this.optionId = item.getOption().getId();
-                this.optionName = item.getOption().getOptionName();
-                this.quantity = item.getQuantity();
-                this.price = item.getPrice();
+                public OptionItemDTO(Item item) {
+                    this.optionId = item.getOption().getId();
+                    this.optionName = item.getOption().getOptionName();
+                    this.quantity = item.getQuantity();
+                    this.price = item.getPrice();
+                }
             }
         }
+
     }
 
 }
