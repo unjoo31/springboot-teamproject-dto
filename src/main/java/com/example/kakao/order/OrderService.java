@@ -10,8 +10,10 @@ import com.example.kakao._core.errors.exception.Exception404;
 import com.example.kakao._core.errors.exception.Exception500;
 import com.example.kakao.cart.Cart;
 import com.example.kakao.cart.CartJPARepository;
+import com.example.kakao.order.OrderResponse.FindByIdDTO;
 import com.example.kakao.order.item.Item;
 import com.example.kakao.order.item.ItemJPARepository;
+import com.example.kakao.product.Product;
 import com.example.kakao.user.User;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class OrderService {
-    private final ItemJPARepository ItemJPARepository;
+    private final ItemJPARepository itemJPARepository;
     private final OrderJPARepository orderJPARepository;
     private final CartJPARepository cartJPARepository;
 
@@ -29,10 +31,36 @@ public class OrderService {
         return null;
     }
 
-    
     // (기능5) 주문결과 확인
-    public OrderResponse.FindByIdDTO findById(int id) {
-        return null;
+    public OrderResponse.FindByIdDTO findById(int orderId, int sessionId) {
+
+        // 1. 유저 주문 목록 조회
+        Order orderPS = orderJPARepository.findByOrderIdAndUserId(orderId, sessionId)
+                .orElseThrow(() -> new Exception404("해당 주문을 찾을 수 없습니다 : " + orderId));
+
+        // 2. 유저 주문 아이템 조회
+        List<Item> items = itemJPARepository.findAllById(orderId);
+        if (items == null) {
+            throw new Exception404("해당 주문 아이템을 찾을 수 없습니다 : " + orderId);
+        }
+
+        // 3. product List 만들기
+        List<Product> products = new ArrayList<>();
+        for (Item item : items) {
+            Product product = item.getOption().getProduct();
+            products.add(product);
+        }
+
+        // 4. 주문 총 금액
+        int totalPrice = 0;
+        for (Item item : items) {
+            totalPrice += item.getPrice();
+        }
+
+        // 5. 주문 -> 결과 DTO
+        OrderResponse.FindByIdDTO responseDTO = new FindByIdDTO(orderPS, products, items, totalPrice);
+
+        return responseDTO;
     }
 
     @Transactional
@@ -58,7 +86,7 @@ public class OrderService {
             itemList.add(item);
         }
         try {
-            ItemJPARepository.saveAll(itemList);
+            itemJPARepository.saveAll(itemList);
         } catch (Exception e) {
             throw new Exception500("결재 실패 : " + e.getMessage());
         }
