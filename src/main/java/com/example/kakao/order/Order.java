@@ -33,9 +33,6 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private List<Item> items = new ArrayList<>();
-
     @Builder
     public Order(int id, User user) {
         this.id = id;
