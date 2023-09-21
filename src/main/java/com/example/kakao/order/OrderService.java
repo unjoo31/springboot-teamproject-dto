@@ -40,8 +40,35 @@ public class OrderService {
     }
 
     // (기능5) 주문결과 확인
-    public OrderResponse.FindByIdDTO findById(int id) {
-        return null;
+    public OrderResponse.FindByIdDTO findById(int orderId, int sessionId) {
+
+        // 1. 유저 주문 목록 조회
+        Order orderPS = orderJPARepository.findByOrderIdAndUserId(orderId, sessionId)
+                .orElseThrow(() -> new Exception404("해당 주문을 찾을 수 없습니다 : " + orderId));
+
+        // 2. 유저 주문 아이템 조회
+        List<Item> items = itemJPARepository.findAllById(orderId);
+        if (items == null) {
+            throw new Exception404("해당 주문 아이템을 찾을 수 없습니다 : " + orderId);
+        }
+
+        // 3. product List 만들기
+        List<Product> products = new ArrayList<>();
+        for (Item item : items) {
+            Product product = item.getOption().getProduct();
+            products.add(product);
+        }
+
+        // 4. 주문 총 금액
+        int totalPrice = 0;
+        for (Item item : items) {
+            totalPrice += item.getPrice();
+        }
+
+        // 5. 주문 -> 결과 DTO
+        OrderResponse.FindByIdDTO responseDTO = new FindByIdDTO(orderPS, products, items, totalPrice);
+
+        return responseDTO;
     }
 
     @Transactional
