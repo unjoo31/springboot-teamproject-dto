@@ -54,7 +54,7 @@ public class OrderResponse {
     @ToString
     @Getter
     @Setter
-    public static class FindByIdDTO {
+    public static class FindByIdDTO { // orderId + totalPrice
 
         private int orderId;
         private List<ItemDTO> items;
