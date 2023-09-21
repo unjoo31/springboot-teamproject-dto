@@ -36,9 +36,9 @@ public class OrderRestController {
     @GetMapping("/orders/{id}")
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        // if (sessionUser == null) {
-        // throw new Exception401("인증되지 않았습니다");
-        // }
+        if (sessionUser == null) {
+            throw new Exception401("인증되지 않았습니다");
+        }
         OrderResponse.FindByIdDTO responseDTO = orderService.findById(id, 1);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
@@ -46,8 +46,12 @@ public class OrderRestController {
     // (기능4) 주문상품 정보조회 (유저별) - 장바구니 내역 가져오기
     @GetMapping("/orders")
     public ResponseEntity<?> findAllByUser() {
-        return null;
-
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        // if (sessionUser == null) {
+        // throw new Exception401("인증되지 않았습니다");
+        // }
+        OrderResponse.FindAllByUserDTO responseDTO = orderService.findAllByUser(sessionUser);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
 }

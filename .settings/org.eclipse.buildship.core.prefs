@@ -1,11 +1,19 @@
+<<<<<<< HEAD
 arguments=--init-script C\:\\Users\\NAMU\\AppData\\Roaming\\Code\\User\\globalStorage\\redhat.java\\1.22.1\\config_win\\org.eclipse.osgi\\57\\0\\.cp\\gradle\\init\\init.gradle --init-script C\:\\Users\\NAMU\\AppData\\Roaming\\Code\\User\\globalStorage\\redhat.java\\1.22.1\\config_win\\org.eclipse.osgi\\57\\0\\.cp\\gradle\\protobuf\\init.gradle
+=======
+arguments=--init-script C\:\\Users\\user\\AppData\\Roaming\\Code\\User\\globalStorage\\redhat.java\\1.22.1\\config_win\\org.eclipse.osgi\\57\\0\\.cp\\gradle\\init\\init.gradle --init-script C\:\\Users\\user\\AppData\\Roaming\\Code\\User\\globalStorage\\redhat.java\\1.22.1\\config_win\\org.eclipse.osgi\\57\\0\\.cp\\gradle\\protobuf\\init.gradle
+>>>>>>> dev
 auto.sync=true
 build.scans.enabled=false
 connection.gradle.distribution=GRADLE_DISTRIBUTION(VERSION(7.4.2))
 connection.project.dir=
 eclipse.preferences.version=1
 gradle.user.home=
+<<<<<<< HEAD
 java.home=C\:/Program Files/Zulu/zulu-11
+=======
+java.home=C\:/Program Files/Eclipse Adoptium/jdk-11.0.20.8-hotspot
+>>>>>>> dev
 jvm.arguments=
 offline.mode=false
 override.workspace.settings=true
