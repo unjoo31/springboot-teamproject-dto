@@ -10,8 +10,10 @@ import com.example.kakao._core.errors.exception.Exception404;
 import com.example.kakao._core.errors.exception.Exception500;
 import com.example.kakao.cart.Cart;
 import com.example.kakao.cart.CartJPARepository;
+import com.example.kakao.order.OrderResponse.FindByIdDTO;
 import com.example.kakao.order.item.Item;
 import com.example.kakao.order.item.ItemJPARepository;
+import com.example.kakao.product.Product;
 import com.example.kakao.user.User;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class OrderService {
-    private final ItemJPARepository ItemJPARepository;
+    private final ItemJPARepository itemJPARepository;
     private final OrderJPARepository orderJPARepository;
     private final CartJPARepository cartJPARepository;
 
@@ -94,7 +96,7 @@ public class OrderService {
             itemList.add(item);
         }
         try {
-            ItemJPARepository.saveAll(itemList);
+            itemJPARepository.saveAll(itemList);
         } catch (Exception e) {
             throw new Exception500("결재 실패 : " + e.getMessage());
         }
