@@ -51,29 +51,16 @@ public class CartResponse {
         @Getter
         @Setter
         public class CartDTO {
-            private OptionDTO option;
+            private String optionName;
             private Integer cartsid;
             private Integer cartsQuantity;
             private Integer cartsPrice;
 
             public CartDTO(Cart cart) {
-                this.option = new OptionDTO(cart.getOption());
+                this.optionName = cart.getOption().getOptionName();
                 this.cartsid = cart.getId();
                 this.cartsQuantity = cart.getQuantity();
                 this.cartsPrice = cart.getPrice();
-            }
-
-        }
-
-        @Getter
-        @Setter
-        public class OptionDTO {
-            private Integer optionId;
-            private String optionName;
-
-            public OptionDTO(Option option) {
-                this.optionId = option.getId();
-                this.optionName = option.getOptionName();
             }
 
         }
