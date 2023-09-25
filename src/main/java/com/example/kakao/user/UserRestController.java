@@ -15,14 +15,13 @@ import com.example.kakao._core.utils.ApiUtils;
 
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor
 @RestController
 public class UserRestController {
 
     private final UserService userService;
     private final HttpSession session;
-    private final ValidAdvice validAdvice;    
+    private final ValidAdvice validAdvice;
 
     // 회원가입
     @PostMapping("/join")
@@ -34,14 +33,13 @@ public class UserRestController {
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDTO requestDTO, Errors errors) {
-        User sessionUser = userService.login(requestDTO);
-        session.setAttribute("sessionUser", sessionUser);
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        String jwt = userService.login(requestDTO);
+        return ResponseEntity.ok().header("Authorization", jwt).body(ApiUtils.success(null));
     }
 
     // 로그아웃
     @GetMapping("/logout")
-    public ResponseEntity<?> logout(){
+    public ResponseEntity<?> logout() {
         session.invalidate();
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
